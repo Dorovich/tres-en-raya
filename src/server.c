@@ -2,6 +2,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int main (int argcm, char *argv[]) {
-
+int main (int argc, char *argv[]) {
+    if (argc < 2) perror("ERROR");
 }
