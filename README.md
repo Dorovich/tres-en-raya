@@ -1,7 +1,7 @@
 HOST: 
 
 $ ./tres-en-raya -h [PORT]
-$ Server started with the IP XX.XX.XX.XX and in the PORT XXXX.
+$ Server started at IP XX.XX.XX.XX on port XXXX.
   Waiting for an oponent...
 
 
@@ -9,4 +9,4 @@ $ Server started with the IP XX.XX.XX.XX and in the PORT XXXX.
 CLIENT: 
 
 $ ./tres-en-raya -c IP PORT
-$ Joined __________ game. Prepare to fight!
+$ Joined game. Prepare to fight!
