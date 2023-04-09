@@ -17,18 +17,18 @@ char *getip() {
     if (pipe(fd) < 0) die("PIPE ERROR\n");
     
     if (fork() == 0) {
-        close(fd[1]);
-        dup2(fd[0], STDOUT_FILENO);
         close(fd[0]);
+        dup2(fd[1], STDOUT_FILENO);
+        close(fd[1]);
         execlp("curl", "curl", "-s", "ifconfig.co", NULL);
         die("FORK ERROR\n");
     }
 
-    close(fd[0]);
-    char buffer[256];
-    int len = read(fd[1], buffer, sizeof(buffer));
-    if (len < 0) die("READ FAIL\n");
     close(fd[1]);
+    char buffer[256];
+    int len = read(fd[0], buffer, sizeof(buffer));
+    if (len < 0) die("READ FAIL\n");
+    close(fd[0]);
 
     char *ip = malloc(len);
     strcpy(ip, buffer);
@@ -62,6 +62,6 @@ int main(int argc, char *argv[]) {
     */
 
     char *ip = getip();
-    printf("la ip es: %s\n", ip);
+    printf("tu ip publica es %s\n", ip);
     free(ip);
 }
