@@ -17,23 +17,26 @@ void die(const char *msg) {
 
 char *getip() {
     int fd[2];
-    if (pipe(fd) < 0) die("PIPE ERROR\n");
+    if (pipe(fd) < 0) die("ERROR: Failed to create pipe.\n");
     
-    if (fork() == 0) {
+    int ret;
+    if ((ret = fork()) < 0) die("ERROR: Failed to fork.\n");
+    if (ret == 0) {
         close(fd[0]);
         dup2(fd[1], STDOUT_FILENO);
         close(fd[1]);
         execlp("curl", "curl", "-s", "ifconfig.co", NULL);
-        die("FORK ERROR\n");
+        die("ERROR: Failed to mutate.\n");
     }
 
     close(fd[1]);
     char buffer[256];
     int len = read(fd[0], buffer, sizeof(buffer));
-    if (len < 0) die("READ FAIL\n");
+    if (len < 0) die("ERROR: Failed to read from pipe.\n");
     close(fd[0]);
 
     char *ip = malloc(len);
+    if (*ip == NULL) die("ERROR: Failed allocate memory.\n");
     strcpy(ip, buffer);
     return ip;
 }
@@ -55,12 +58,14 @@ int main(int argc, char *argv[]) {
         if (argc == 3) port = argv[2];
         else port = "8000"; // random?
 
-        if (fork() == 0) {
+        int ret;
+        if ((ret = fork()) < 0) die("ERROR: Failed to fork.\n");
+        if (ret == 0) {
             execlp("./server", "./server", ip, port, NULL);
-            exit(1);
+            die("ERROR: Failed to mutate.\n");
         }
         execlp("./client", "./client", ip, port, NULL);
-        exit(1);
+        die("ERROR: Failed to mutate.\n");
     }
     
     usage();
