@@ -4,6 +4,9 @@
 #include <string.h>
 
 void usage(void) {
+    char buffer[1024];
+    int len = sprintf(buffer, "Usage:\nHOST > ./tres-en-raya -h [PORT]\nCLIENT > ./tres-en-raya IP PORT\n");
+    write(1, buffer, len);
     exit(1);
 }
 
