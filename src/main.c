@@ -4,7 +4,7 @@
 #include <string.h>
 
 void usage(void) {
-    // modo de uso
+    exit(1);
 }
 
 void die(const char *msg) {
@@ -36,7 +36,6 @@ char *getip() {
 }
 
 int main(int argc, char *argv[]) {
-    /*
     char *ip, *port;
 
     if (argc < 2) usage();
@@ -49,19 +48,18 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     else if (strcmp(argv[1], "-h") == 0) {
+        ip = getip();
+        if (argc == 3) port = argv[2];
+        else port = "8000"; // random?
+
         if (fork() == 0) {
-            execlp("./server", "./server", NULL);
+            execlp("./server", "./server", ip, port, NULL);
             exit(1);
         }
-        execlp("./client", "./client", NULL);
+        execlp("./client", "./client", ip, port, NULL);
         exit(1);
     }
     
     usage();
     return 0;
-    */
-
-    char *ip = getip();
-    printf("tu ip publica es %s\n", ip);
-    free(ip);
 }

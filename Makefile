@@ -1,8 +1,13 @@
-tres-en-raya: main
-	gcc main -o tres-en-raya
+all: tres-en-raya client server
 
-main: src/main.c
-	gcc -c src/main.c
+tres-en-raya: src/main.c
+	gcc src/main.c -o tres-en-raya
+
+client: src/client.c
+	gcc src/client.c -o client
+
+server: src/server.c
+	gcc src/server.c -o server
 
 clean:
-	rm main tres-en-raya
+	rm tres-en-raya client server
