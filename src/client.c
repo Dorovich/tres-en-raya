@@ -10,37 +10,36 @@ void die(const char *msg) {
     exit(1);
 }
 
-int main (int argc, char *argv[]) {
-    char buffer[512];
-    int len = sprintf(buffer, "SOY EL CLIENTE. La IP del servidor es %s y el PORT es %s\n", argv[1], argv[2]);
-    write(1, buffer, len);
-
-    // WORKING ON
-
+int main(int argc, char *argv[]) {
     int client_fd;
-    struct sockaddr_in address;
-    int addr_len = sizeof(address);
-    int opt_value[1] = { 1 };
+    struct sockaddr_in server_address;
+    char buffer[1024];
 
-    if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
-        die("ERROR: Failed to create a socket.");
-    
-    if (setsockopt(client_fd, SOL_SOCKET, SO_REUSEADDR, opt_value, sizeof(opt_value)) < 0) 
-        die("ERROR: Failed to specify a socket's behaviour.");
-    
-    address.sin_family = AF_INET;
-    address.sin_port = htons(atoi(argv[2]));
-
-    if (inet_pton(AF_INET, argv[1], &address.sin_addr) <= 0)
-        die("");
-  
-    if (connect(client_fd, (struct sockaddr*)&address, sizeof(address)) < 0)
+    // Crear el socket
+    if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         die("");
 
+    // Establecer la dirección del servidor
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = inet_addr(argv[1]); // dirección IP del servidor
+    server_address.sin_port = htons(atoi(argv[2]));
+
+    // Conectar al servidor
+    if (connect(client_fd, (struct sockaddr*)&server_address, sizeof(server_address)) < 0)
+        die("");
+    printf("Conexión establecida.\n");
+
+    // Leer y escribir datos
     while (1) {
-        int cont = read(client_fd, buffer, sizeof(buffer));
-        if (cont < 0) die("");
-        write(1, buffer, cont);
-        close(client_fd);
+        printf("Cliente: ");
+        fgets(buffer, sizeof(buffer), stdin);
+        send(client_fd, buffer, sizeof(buffer), 0);
+        recv(client_fd, buffer, sizeof(buffer), 0);
+        printf("Servidor: %s", buffer);
     }
+
+    // Cerrar el socket
+    close(client_fd);
+
+    return 0;
 }

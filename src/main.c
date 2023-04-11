@@ -59,15 +59,6 @@ int main(int argc, char *argv[]) {
         else port = "8000"; // random?
         execlp("./server", "./server", ip, port, NULL);
         die("ERROR: Failed to mutate.\n");
-        
-        /* int ret;
-        if ((ret = fork()) < 0) die("ERROR: Failed to fork.\n");
-        if (ret == 0) {
-            execlp("./server", "./server", ip, port, NULL);
-            die("ERROR: Failed to mutate.\n");
-        }
-        execlp("./client", "./client", ip, port, NULL);
-        die("ERROR: Failed to mutate.\n"); */
     }
     
     usage();
