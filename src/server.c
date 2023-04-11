@@ -37,6 +37,12 @@ int main (int argc, char *argv[]) {
     if (listen(server_fd, 2))
         die("ERROR: Failed to listen.");
 
-    if ((client_fd = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addr_len)) < 0)
-        die("ERROR: Failed to accept a connection.");
+    while (1) {
+        if ((client_fd = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addr_len)) < 0)
+            die("ERROR: Failed to accept a connection.");
+        
+        len = sprintf(buffer, "HOLA SOY EL SERVER.");
+        write(client_fd, buffer, len);
+        close(client_fd);
+    }
 }
