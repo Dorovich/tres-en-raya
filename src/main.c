@@ -35,8 +35,8 @@ char *getip() {
     if (len < 0) die("ERROR: Failed to read from pipe.\n");
     close(fd[0]);
 
-    char *ip = malloc(len);
-    if (*ip == NULL) die("ERROR: Failed allocate memory.\n");
+    char *ip = malloc(len * sizeof(char));
+    if (ip == NULL) die("ERROR: Failed allocate memory.\n");
     strcpy(ip, buffer);
     return ip;
 }
@@ -51,21 +51,23 @@ int main(int argc, char *argv[]) {
         ip = argv[2];
         port = argv[3];
         execlp("./client", "./client", ip, port, NULL);
-        exit(1);
+        die("ERROR: Failed to mutate.\n");
     }
     else if (strcmp(argv[1], "-h") == 0) {
         ip = getip();
         if (argc == 3) port = argv[2];
         else port = "8000"; // random?
-
-        int ret;
+        execlp("./server", "./server", ip, port, NULL);
+        die("ERROR: Failed to mutate.\n");
+        
+        /* int ret;
         if ((ret = fork()) < 0) die("ERROR: Failed to fork.\n");
         if (ret == 0) {
             execlp("./server", "./server", ip, port, NULL);
             die("ERROR: Failed to mutate.\n");
         }
         execlp("./client", "./client", ip, port, NULL);
-        die("ERROR: Failed to mutate.\n");
+        die("ERROR: Failed to mutate.\n"); */
     }
     
     usage();

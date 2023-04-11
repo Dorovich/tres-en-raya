@@ -5,6 +5,11 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+void die(const char *msg) {
+    perror(msg);
+    exit(1);
+}
+
 int main (int argc, char *argv[]) {
     char buffer[512];
     int len = sprintf(buffer, "SOY EL CLIENTE. La IP del servidor es %s y el PORT es %s\n", argv[1], argv[2]);
@@ -34,7 +39,7 @@ int main (int argc, char *argv[]) {
 
     while (1) {
         int cont = read(client_fd, buffer, sizeof(buffer));
-        if (cont < 0) die();
+        if (cont < 0) die("");
         write(1, buffer, cont);
         close(client_fd);
     }
