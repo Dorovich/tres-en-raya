@@ -16,14 +16,27 @@ int main (int argc, char *argv[]) {
 
     // WORKING PROGRESS
 
-    int server_fd;
+    int server_fd, client_fd;
     struct sockaddr_in address;
+    int addr_len = sizeof(address);
+    int opt_value[1] = { 1 };
 
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) die("ERROR: Failed to create a socket.");
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+        die("ERROR: Failed to create a socket.");
     
-    //if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) die("");
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, opt_value, sizeof(opt_value)) < 0) 
+        die("ERROR: Failed to specify a socket's behaviour.");
     
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(atoi(argv[2]));
+
+    if (bind(server_fd, (struct sockaddr*)&address, addr_len) < 0)
+        die("ERROR: Failed to bind a socket.");
+
+    if (listen(server_fd, 2))
+        die("ERROR: Failed to listen.");
+
+    if ((client_fd = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addr_len)) < 0)
+        die("ERROR: Failed to accept a connection.");
 }
