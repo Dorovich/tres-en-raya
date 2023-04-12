@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     // Establecer la dirección del servidor
     server_address.sin_family = AF_INET;
-    server_address.sin_addr.s_addr = inet_addr(argv[1]); // dirección IP del servidor
+    server_address.sin_addr.s_addr = inet_addr("10.192.14.84"/* argv[1] */); // dirección IP del servidor
     server_address.sin_port = htons(atoi(argv[2]));
 
     // Conectar al servidor
